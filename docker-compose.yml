@@ -1,0 +1,42 @@
+version: "3"
+
+services:
+    nginx:
+        image: nginx
+        restart: always
+        networks:
+            - default
+            - web
+        volumes:
+            - ./:/var/www/html
+            - .docker/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+        depends_on:
+            - php
+
+    php:
+        build:
+            context: ./
+            dockerfile: .docker/php/Dockerfile
+            args:
+                uid: 1000
+        restart: always
+        networks:
+            - default
+            - db
+        volumes:
+            - ./:/var/www/html
+        depends_on:
+            - redis
+    
+    redis:
+        image: redis
+        restart: always
+        command: redis-server --requirepass secret
+
+networks:
+    web:
+        external:
+            name: web
+    db:
+        external:
+            name: db
