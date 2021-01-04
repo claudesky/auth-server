@@ -16,18 +16,10 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->all();
-        
-        Auth::attempt($credentials);
-    
-        $user = Auth::user();
-    
-        if (!Auth::check()) {
-            return response()->json([
-                'message' => 'Invalid Credentials.'
-            ], 401);
-        }
+        $request->session()->regenerate();
 
-        return $user;
+        session(['last_login' => now()->timestamp]);
+
+        return auth()->user();
     }
 }
