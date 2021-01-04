@@ -28,8 +28,6 @@ class Login
             ], 401);
         }
 
-        session('last_active', now());
-
         return $next($request);
     }
 }
