@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\AuthController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -23,6 +25,8 @@ Route::get('/test', function() {
         'hello' => 'world!'
     ];
 });
+
+Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
