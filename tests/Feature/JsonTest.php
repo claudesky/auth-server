@@ -8,7 +8,7 @@ use Tests\TestCase;
 class JsonTest extends TestCase
 {
     /**
-     * A basic test example.
+     * Test that the API responds with valid JSON
      *
      * @return void
      */
