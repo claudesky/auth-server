@@ -11,7 +11,7 @@ class LoginTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * Test that a login with valid credentials works as succeeds
+     * Test that a login with valid credentials succeeds
      *
      * @return void
      */
