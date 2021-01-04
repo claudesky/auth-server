@@ -82,4 +82,52 @@ class LoginTest extends TestCase
 
         $response->assertCookieMissing(config('session.cookie'));
     }
+
+    public function testValidLoginSetsLastLoginSessionVariable()
+    {
+        $user = User::factory()->create();
+
+        $response = $this->performValidLogin($user);
+
+        $response->assertSessionHas('last_login');
+    }
+
+    public function testInvalidLoginDoesNotSetLastLoginSessionVariable()
+    {
+        $user = User::factory()->create();
+
+        $response = $this->performInvalidLogin($user);
+
+        $response->assertSessionMissing('last_login');
+    }
+
+    public function testValidLoginUpdatesExistingLastLoginSessionVariable()
+    {
+        $user = User::factory()->create();
+
+        $past_login = now()->subtract('seconds', 1)->timestamp;
+
+        $this->withSession(['last_login' => $past_login])
+            ->performValidLogin($user);
+
+        $this->assertNotEquals(
+            session('last_login'),
+            $past_login
+        );
+    }
+
+    public function testInvalidLoginDoesNotUpdateExistingLastLoginSessionVariable()
+    {
+        $user = User::factory()->create();
+
+        $past_login = now()->subtract('seconds', 1)->timestamp;
+
+        $this->withSession(['last_login' => $past_login])
+            ->performInvalidLogin($user);
+
+        $this->assertEquals(
+            session('last_login'),
+            $past_login
+        );
+    }
 }
