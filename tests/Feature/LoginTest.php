@@ -10,17 +10,9 @@ class LoginTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * Test that a login with valid credentials succeeds
-     *
-     * @return void
-     */
-    public function testValidLoginSuceeds()
+    private function performValidLogin(User $user)
     {
-        $user = User::factory()
-            ->create();
-
-        $response = $this->json(
+        return $this->json(
             'POST',
             '/login',
             [
@@ -28,6 +20,25 @@ class LoginTest extends TestCase
                 'password' => 'password'
             ]
         );
+    }
+
+    private function performInvalidLogin(User $user)
+    {
+        return $this->json(
+            'POST',
+            '/login',
+            [
+                'email' => $user->email,
+                'password' => 'wrongpassword'
+            ]
+        );
+    }
+
+    public function testValidLoginSuceeds()
+    {
+        $user = User::factory()->create();
+
+        $response = $this->performValidLogin($user);
 
         $response->assertStatus(200);
 
@@ -38,24 +49,11 @@ class LoginTest extends TestCase
         $this->assertAuthenticatedAs($user);
     }
 
-    /**
-     * Test that a login with invalid credentials fails
-     *
-     * @return void
-     */
     public function testInvalidLoginFails()
     {
-        $user = User::factory()
-            ->create();
+        $user = User::factory()->create();
 
-        $response = $this->json(
-            'POST',
-            '/login',
-            [
-                'email' => $user->email,
-                'password' => 'wrongpassword'
-            ]
-        );
+        $response = $this->performInvalidLogin($user);
 
         $response->assertStatus(401);
 
@@ -66,49 +64,22 @@ class LoginTest extends TestCase
         $this->assertGuest();
     }
 
-    /**
-     * Test that valid cookie is set on successful login.
-     *
-     * @return void
-     */
     public function testValidLoginSetsCookie()
     {
-        $user = User::factory()
-            ->create();
+        $user = User::factory()->create();
 
-        $response = $this->json(
-            'POST',
-            '/login',
-            [
-                'email' => $user->email,
-                'password' => 'password'
-            ]
-        );
+        $response = $this->performValidLogin($user);
 
         $response->assertCookie(config('session.cookie'));
     }
 
-    /**
-     * Test that no cookie is set on failed login.
-     *
-     * @return void
-     */
     public function testInvalidLoginDoesNotSetCookie()
     {
         $user = User::factory()
             ->create();
 
-        $response = $this->json(
-            'POST',
-            '/login',
-            [
-                'email' => $user->email,
-                'password' => 'wrongpassword'
-            ]
-        );
+        $response = $this->performInvalidLogin($user);
 
         $response->assertCookieMissing(config('session.cookie'));
     }
-
-
 }
