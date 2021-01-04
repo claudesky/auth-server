@@ -18,6 +18,12 @@ Route::get('/', function () {
     return phpversion()."\n";
 });
 
+Route::get('/test', function() {
+    return [
+        'hello' => 'world!'
+    ];
+});
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
