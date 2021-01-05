@@ -9,17 +9,32 @@ class AuthController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['login', 'session'], [
+        $this->middleware(['session'], [
             'only' => ['login']
         ]);
     }
 
     public function login(Request $request)
     {
-        $request->session()->regenerate();
+        $credentials = $request->all();
+        
+        Auth::attempt($credentials);
+
+        if (!Auth::check()) {
+
+            return response()->json([
+                'message' => 'Invalid Credentials.'
+            ], 401);
+
+        }
 
         session(['last_login' => now()->timestamp]);
 
         return auth()->user();
+    }
+
+    public function logout(Request $request)
+    {
+
     }
 }
