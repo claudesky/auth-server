@@ -64,25 +64,6 @@ class LoginTest extends TestCase
         $this->assertGuest();
     }
 
-    public function testValidLoginSetsCookie()
-    {
-        $user = User::factory()->create();
-
-        $response = $this->performValidLogin($user);
-
-        $response->assertCookie(config('session.cookie'));
-    }
-
-    public function testInvalidLoginDoesNotSetCookie()
-    {
-        $user = User::factory()
-            ->create();
-
-        $response = $this->performInvalidLogin($user);
-
-        $response->assertCookieMissing(config('session.cookie'));
-    }
-
     public function testValidLoginSetsLastLoginSessionVariable()
     {
         $user = User::factory()->create();
