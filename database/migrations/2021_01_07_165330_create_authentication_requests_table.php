@@ -17,6 +17,9 @@ class CreateAuthenticationRequestsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('authorization_source_id')
                 ->index();
+            $table->foreign('authorization_source_id')
+                ->references('id')
+                ->on('authorization_sources');
             $table->string('nonce', 63)
                 ->index();
             $table->string('status', 31)
