@@ -17,9 +17,15 @@ class CreateIdentifiersTable extends Migration
             $table->id();
             $table->unsignedBigInteger('authorization_source_id')
                 ->index();
+            $table->foreign('authorization_source_id')
+                ->references('id')
+                ->on('authorization_sources');
             $table->unsignedBigInteger('user_id')
                 ->nullable()
                 ->index();
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users');
             $table->string('token');
             $table->string('refresh_token')
                 ->nullable();
