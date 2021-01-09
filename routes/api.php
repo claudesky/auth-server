@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AuthorizationSourceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,10 @@ Route::get('/test', function() {
         'hello' => 'world!'
     ];
 });
+
+Route::apiResources([
+    'authorization_sources' => AuthorizationSourceController::class,
+]);
 
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
