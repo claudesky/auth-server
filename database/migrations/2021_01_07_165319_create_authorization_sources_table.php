@@ -15,6 +15,7 @@ class CreateAuthorizationSourcesTable extends Migration
     {
         Schema::create('authorization_sources', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
             $table->string('client_id');
             $table->string('client_secret');
             $table->json('config')
