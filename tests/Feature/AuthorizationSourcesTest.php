@@ -52,7 +52,6 @@ class AuthorizationSourcesTest extends TestCase
 
     public function testCreateAuthorizationSourceCachesConfig()
     {
-        $this->withoutExceptionHandling();
         $url = $this->base_url;
 
         $payload = [
