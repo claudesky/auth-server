@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AuthorizationSource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
@@ -36,5 +38,27 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
 
+    }
+
+    public function authRequest(AuthorizationSource $authorization_source)
+    {
+        /** @var AbstractProvider */
+        $driver = Socialite::driver($authorization_source->name);
+    
+        $location = $driver
+            ->stateless()
+            ->redirect()
+            ->headers
+            ->get('Location');
+    
+        $authentication_request = $authorization_source
+            ->authentication_requests()
+            ->create();
+        
+        $location .= "&state=$authentication_request->nonce";
+    
+        return [
+            'redirect' => $location
+        ];
     }
 }
