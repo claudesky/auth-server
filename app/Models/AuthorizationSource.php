@@ -37,4 +37,9 @@ class AuthorizationSource extends Model
     protected $casts = [
         'config' => 'array',
     ];
+
+    public function authentication_requests()
+    {
+        return $this->hasMany(AuthenticationRequest::class);
+    }
 }
