@@ -33,6 +33,8 @@ Route::apiResources([
 
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
+Route::get('/auth/{authorization_source:name}', [AuthController::class, 'authRequest']);
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
