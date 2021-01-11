@@ -2,10 +2,13 @@
 
 namespace App\Providers;
 
+use App\Models\AuthorizationSource;
+use App\Models\AuthenticationRequest;
+use App\Observers\AuthorizationSourceObserver;
+use App\Observers\AuthenticationRequestObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -27,6 +30,7 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        AuthorizationSource::observe(AuthorizationSourceObserver::class);
+        AuthenticationRequest::observe(AuthenticationRequestObserver::class);
     }
 }
