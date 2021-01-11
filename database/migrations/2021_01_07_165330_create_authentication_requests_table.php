@@ -23,6 +23,7 @@ class CreateAuthenticationRequestsTable extends Migration
             $table->string('nonce', 63)
                 ->index();
             $table->string('status', 31)
+                ->default('pending')
                 ->index();
             $table->timestamps();
         });
