@@ -2,8 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Models\AuthenticationRequest;
 use App\Models\AuthorizationSource;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Tests\TestCase;
 
 class AuthorizationSourcesTest extends TestCase
@@ -55,6 +57,72 @@ class AuthorizationSourcesTest extends TestCase
 
         $response->assertSuccessful();
         $response->assertJson($payload);
+    }
+
+    public function testCreateAuthorizationSourceCachesConfig()
+    {
+        $this->withoutExceptionHandling();
+        $url = $this->base_url;
+
+        $payload = [
+            'name' => 'google',
+            'client_id' => '123abc',
+            'client_secret' => '456def',
+            'config' => ['hello' => 'world'],
+        ];
+
+        $expected_cache = [
+            'google' => array_merge(
+                [
+                    'id' => 1,
+                    'redirect' => secure_url('/callback'),
+                ],
+                $payload
+            )
+        ];
+
+        Cache::shouldReceive('put')
+            ->once()
+            ->with(
+                'authorization_sources',
+                $expected_cache
+            );
+
+        $response = $this->json(
+            'POST',
+            $url,
+            $payload
+        );
+
+        $response->assertSuccessful();
+        $response->assertJson($payload);
+    }
+
+    public function testNewAuthorizationSourceReturnsRedirectUrl()
+    {
+        $this->createAuthorizationSource('google');
+
+        $url = '/auth/google';
+
+        $response = $this->get($url);
+
+        $response->assertSuccessful();
+        $response->assertJsonStructure(['redirect']);
+
+        $authentication_request = AuthenticationRequest::first();
+
+        $redirect_url = $response->json('redirect');
+        $this->assertStringContainsString($authentication_request->nonce, $redirect_url);
+        $this->assertStringContainsString('google', $redirect_url);
+    }
+
+    public function testNoAuthorizationSourceFails()
+    {
+        $url = '/auth/google';
+
+        $response = $this->get($url);
+
+        $response->assertStatus(404);
     }
 
     public function testShowAuthorizationSourceWorks()
