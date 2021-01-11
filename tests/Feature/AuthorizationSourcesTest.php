@@ -3,25 +3,16 @@
 namespace Tests\Feature;
 
 use App\Models\AuthenticationRequest;
-use App\Models\AuthorizationSource;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
+use Tests\CreatesAuthorizationSource;
 use Tests\TestCase;
 
 class AuthorizationSourcesTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, CreatesAuthorizationSource;
 
     private $base_url = '/authorization_sources';
-
-    private function createAuthorizationSource(?string $name = 'google'): AuthorizationSource
-    {
-        return AuthorizationSource::create([
-            'name' => $name,
-            'client_id' => '123abc',
-            'client_secret' => '456def',
-        ]);
-    }
 
     public function testIndexAuthorizationSourcesWorks()
     {
