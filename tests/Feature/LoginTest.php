@@ -34,7 +34,7 @@ class LoginTest extends TestCase
         );
     }
 
-    public function testValidLoginSuceeds()
+    public function testValidLoginSucceeds()
     {
         $user = User::factory()->create();
 
