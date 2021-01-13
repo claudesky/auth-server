@@ -26,8 +26,8 @@ class CreateIdentifiersTable extends Migration
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users');
-            $table->string('token');
-            $table->string('refresh_token')
+            $table->string('token', 8190);
+            $table->string('refresh_token', 8190)
                 ->nullable();
             $table->string('full_name')
                 ->nullable();
