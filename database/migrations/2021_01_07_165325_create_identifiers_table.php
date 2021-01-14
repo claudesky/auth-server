@@ -17,7 +17,8 @@ class CreateIdentifiersTable extends Migration
             $table->id();
             $table->foreignId('authorization_source_id')->constrained();
             $table->foreignId('user_id')->nullable()->constrained();
-            $table->string('subject');
+            $table->string('subject')
+                ->index();
             $table->string('token', 8190);
             $table->string('refresh_token', 8190)
                 ->nullable();
