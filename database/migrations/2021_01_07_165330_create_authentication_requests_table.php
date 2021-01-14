@@ -15,11 +15,8 @@ class CreateAuthenticationRequestsTable extends Migration
     {
         Schema::create('authentication_requests', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('authorization_source_id')
-                ->index();
-            $table->foreign('authorization_source_id')
-                ->references('id')
-                ->on('authorization_sources');
+            $table->foreignId('authorization_source_id')
+                ->constrained();
             $table->string('nonce', 63)
                 ->index();
             $table->string('status', 31)

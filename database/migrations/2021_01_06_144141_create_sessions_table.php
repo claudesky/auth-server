@@ -18,10 +18,7 @@ class CreateSessionsTable extends Migration
                 ->primary();
             $table->foreignId('user_id')
                 ->nullable()
-                ->index();
-            $table->foreign('user_id')
-                ->references('id')
-                ->on('users');
+                ->constrained();
             $table->string('ip_address', 45)
                 ->nullable()
                 ->index();

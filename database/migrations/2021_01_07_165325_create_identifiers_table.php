@@ -15,17 +15,8 @@ class CreateIdentifiersTable extends Migration
     {
         Schema::create('identifiers', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('authorization_source_id')
-                ->index();
-            $table->foreign('authorization_source_id')
-                ->references('id')
-                ->on('authorization_sources');
-            $table->unsignedBigInteger('user_id')
-                ->nullable()
-                ->index();
-            $table->foreign('user_id')
-                ->references('id')
-                ->on('users');
+            $table->foreignId('authorization_source_id')->constrained();
+            $table->foreignId('user_id')->nullable()->constrained();
             $table->string('subject');
             $table->string('token', 8190);
             $table->string('refresh_token', 8190)
